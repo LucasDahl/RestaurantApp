@@ -10,10 +10,16 @@ import UIKit
 
 @IBDesignable class LocationView: BaseView {
 
+    // Outlets
     @IBOutlet weak var allowButton: UIButton!
     @IBOutlet weak var denyButton: UIButton!
     
+    // Properties
+    var didTapAllow: (() -> Void)?
+    
     @IBAction func allowAction(_ sender: UIButton) {
+        
+        didTapAllow?()
         
     }
     

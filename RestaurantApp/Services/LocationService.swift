@@ -21,10 +21,12 @@ final class LocationService: NSObject {
     var newLocation: ((Result<CLLocation>) -> Void)?
     var didChangeStatus: ((Bool) -> Void)?
     
+    // Location manager
     private let manager: CLLocationManager
     
     init(manger: CLLocationManager = .init()) {
         
+        // init the manager properties
         self.manager = manger
         super.init()
         manger.delegate = self
@@ -37,10 +39,24 @@ final class LocationService: NSObject {
         
     }
     
+    // Get the authorization
+    func requestLocationAuthorization() {
+        
+        manager.requestWhenInUseAuthorization()
+        
+    }
+    
+    // Get locations update
+    func getLocation() {
+        
+        manager.requestLocation()
+        
+    }
+    
 }
 
 //=================
-// MARK: - Delgates
+// MARK: - Delegates
 //=================
 
 extension LocationService: CLLocationManagerDelegate {
