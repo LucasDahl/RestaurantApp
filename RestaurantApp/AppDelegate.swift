@@ -7,17 +7,28 @@
 //
 
 import UIKit
+import Moya
 
 @UIApplicationMain
 class AppDelegate: UIResponder, UIApplicationDelegate {
 
     // Properties
     let window = UIWindow()
-    let  locationService = LocationService()
+    let locationService = LocationService()
     let storyboard = UIStoryboard(name: "Main", bundle: nil)
+    let service = MoyaProvider<YelpService.BusinessesProvider>()
 
 
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
+        
+        service.request(.search(lat: 42.36, long: -71.05)) { (result) in
+            switch result {
+            case .success(let response):
+                print(try? JSONSerialization.jsonObject(with: response.data, options: []))
+            case .failure(let error):
+                print("Error: \(error)")
+            }
+        }
         
         // Look for the location statues
         switch locationService.status {
@@ -26,7 +37,10 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
                 locationViewController?.locationService = locationService
                 window.rootViewController = locationViewController
             default:
-                assertionFailure()// Will fix later, just for test
+                //assertionFailure() ***falls throe the first case, at this time i am not sure why
+                let locationViewController = storyboard.instantiateViewController(withIdentifier: "LocationViewController") as? LocationViewController
+                locationViewController?.locationService = locationService
+                window.rootViewController = locationViewController
         }
         window.makeKeyAndVisible()
         

@@ -17,10 +17,6 @@ enum Result<T> {
 
 final class LocationService: NSObject {
     
-    // Properties
-    var newLocation: ((Result<CLLocation>) -> Void)?
-    var didChangeStatus: ((Bool) -> Void)?
-    
     // Location manager
     private let manager: CLLocationManager
     
@@ -32,6 +28,10 @@ final class LocationService: NSObject {
         manger.delegate = self
         
     }
+    
+    // Properties
+    var newLocation: ((Result<CLLocation>) -> Void)?
+    var didChangeStatus: ((Bool) -> Void)?
     
     // Get the authorization status
     var status: CLAuthorizationStatus {
