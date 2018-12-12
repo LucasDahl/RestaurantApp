@@ -25,15 +25,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         // Convert the API data from snakeCase camel
         jsonDecoder.keyDecodingStrategy = .convertFromSnakeCase
         
-        service.request(.search(lat: 42.36, long: -71.05)) { (result) in
-            switch result {
-            case .success(let response):
-                let root = try? self.jsonDecoder.decode(Root.self, from: response.data)
-                print(root)
-            case .failure(let error):
-                print("Error: \(error)")
-            }
-        }
+        
         
         // Look for the location statues
         switch locationService.status {
@@ -42,14 +34,31 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
                 locationViewController?.locationService = locationService
                 window.rootViewController = locationViewController
             default:
-                //assertionFailure() ***falls throe the first case, at this time i am not sure why
-                let locationViewController = storyboard.instantiateViewController(withIdentifier: "LocationViewController") as? LocationViewController
-                locationViewController?.locationService = locationService
-                window.rootViewController = locationViewController
+                let nav = storyboard.instantiateViewController(withIdentifier: "RestaurantNavigationController") as? UINavigationController
+                window.rootViewController = nav
+            loadBusinesses()
         }
         window.makeKeyAndVisible()
         
         return true
+    }
+    
+    private func loadBusinesses() {
+        
+        service.request(.search(lat: 42.36, long: -71.05)) { (result) in
+            switch result {
+            case .success(let response):
+                let root = try? self.jsonDecoder.decode(Root.self, from: response.data)
+                let viewModels = root?.businesses.compactMap(RestaurantListViewModel.init)
+                if let nav = self.window.rootViewController as? UINavigationController,
+                    let restaurantListViewController = nav.topViewController as? RestaurantTableTableViewController {
+                    restaurantListViewController.vieModels = viewModels ?? []
+                }
+            case .failure(let error):
+                print("Error: \(error)")
+            }
+        }
+        
     }
 
 
