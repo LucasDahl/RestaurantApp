@@ -31,8 +31,23 @@ struct RestaurantListViewModel {
     
     let name:String
     let imageUrl:URL
-    let distance:String
+    let distance:Double
     let id:String
+    
+    // This will format the distance
+    static var numberFormatter: NumberFormatter {
+        
+        let nf = NumberFormatter()
+        nf.numberStyle = .decimal
+        nf.maximumFractionDigits = 2
+        nf.minimumFractionDigits = 2
+        return nf
+        
+    }
+    
+    var formattedDistance: String? {
+        return RestaurantListViewModel.numberFormatter.string(from: distance as NSNumber)
+    }
     
 }
 
@@ -44,6 +59,6 @@ extension RestaurantListViewModel {
         self.name = business.name
         self.id = business.id
         self.imageUrl = business.imageUrl
-        self.distance = "\(business.distance / 1606.344)"
+        self.distance = business.distance / 1606.344
     }
 }

@@ -8,6 +8,7 @@
 
 import UIKit
 import Moya
+import CoreLocation
 
 @UIApplicationMain
 class AppDelegate: UIResponder, UIApplicationDelegate {
@@ -25,32 +26,52 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         // Convert the API data from snakeCase camel
         jsonDecoder.keyDecodingStrategy = .convertFromSnakeCase
         
+        //  Get the location
+        locationService.didChangeStatus = {[weak self] success in
+            
+            if success {
+                self?.locationService.getLocation()
+            }
+            
+        }
         
+        // Store the location
+        locationService.newLocation = {[weak self] result in
+            
+            switch result {
+            case .success(let location):
+                self?.loadBusinesses(with: location.coordinate)
+            case .failure(let error):
+                assertionFailure("Error getting the location: \(error)")
+            }
+            
+        }
         
         // Look for the location statues
         switch locationService.status {
             case .notDetermined, .denied, .restricted:
                 let locationViewController = storyboard.instantiateViewController(withIdentifier: "LocationViewController") as? LocationViewController
-                locationViewController?.locationService = locationService
+                locationViewController?.delegate = self
                 window.rootViewController = locationViewController
             default:
                 let nav = storyboard.instantiateViewController(withIdentifier: "RestaurantNavigationController") as? UINavigationController
                 window.rootViewController = nav
-            loadBusinesses()
+                locationService.getLocation()
         }
         window.makeKeyAndVisible()
         
         return true
     }
     
-    private func loadBusinesses() {
+    private func loadBusinesses(with coordiante: CLLocationCoordinate2D) {
         
-        service.request(.search(lat: 42.36, long: -71.05)) { (result) in
+        service.request(.search(lat: coordiante.latitude, long: coordiante.longitude)) { [weak self] (result) in
             switch result {
             case .success(let response):
-                let root = try? self.jsonDecoder.decode(Root.self, from: response.data)
-                let viewModels = root?.businesses.compactMap(RestaurantListViewModel.init)
-                if let nav = self.window.rootViewController as? UINavigationController,
+                guard let strongSelf = self else {return}
+                let root = try? strongSelf.jsonDecoder.decode(Root.self, from: response.data)
+                let viewModels = root?.businesses.compactMap(RestaurantListViewModel.init).sorted(by: { $0.distance < $1.distance})
+                if let nav = strongSelf.window.rootViewController as? UINavigationController,
                     let restaurantListViewController = nav.topViewController as? RestaurantTableTableViewController {
                     restaurantListViewController.vieModels = viewModels ?? []
                 }
@@ -64,3 +85,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
 } // End class
 
+extension AppDelegate: LocationAction {
+    func didTapAllow() {
+        locationService.requestLocationAuthorization()
+    }
+}
