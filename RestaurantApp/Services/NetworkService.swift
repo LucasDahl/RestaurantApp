@@ -9,7 +9,7 @@
 import Foundation
 import Moya
 
-private let apiKey = "HnCLklcO4HuIQYXG7aSTyZfIQAmsfFMQ7aGSmc6IBlZCfOQASJpRNEQEBlrnNwdJXdfiA5JPmbKCgQhlgnFAHocgllyW3hQfsY3pGk-P478obCmNWPKzEWqaKNEOXHYx"
+private let apiKey = ""
 
 enum YelpService  {
     enum BusinessesProvider: TargetType {

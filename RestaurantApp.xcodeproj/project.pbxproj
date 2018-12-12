@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		95140D2F21C1541600DB97D9 /* Models.swift in Sources */ = {isa = PBXBuildFile; fileRef = 95140D2E21C1541600DB97D9 /* Models.swift */; };
 		9533A75A21BF018300F3243E /* Podfile in Resources */ = {isa = PBXBuildFile; fileRef = 9533A75921BF018300F3243E /* Podfile */; };
 		9533A75C21BF039600F3243E /* NetworkService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9533A75B21BF039600F3243E /* NetworkService.swift */; };
 		953EA547218201AA003D0BD0 /* BaseView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 953EA546218201AA003D0BD0 /* BaseView.swift */; };
@@ -26,6 +27,7 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		95140D2E21C1541600DB97D9 /* Models.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Models.swift; sourceTree = "<group>"; };
 		9533A75921BF018300F3243E /* Podfile */ = {isa = PBXFileReference; lastKnownFileType = text; path = Podfile; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.ruby; };
 		9533A75B21BF039600F3243E /* NetworkService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetworkService.swift; sourceTree = "<group>"; };
 		953EA546218201AA003D0BD0 /* BaseView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BaseView.swift; sourceTree = "<group>"; };
@@ -102,6 +104,7 @@
 			children = (
 				953EA55121820598003D0BD0 /* Views */,
 				953EA54F2182058E003D0BD0 /* RestaurantTableTableViewController.swift */,
+				95140D2E21C1541600DB97D9 /* Models.swift */,
 			);
 			path = List;
 			sourceTree = "<group>";
@@ -304,6 +307,7 @@
 				9533A75C21BF039600F3243E /* NetworkService.swift in Sources */,
 				953EA547218201AA003D0BD0 /* BaseView.swift in Sources */,
 				953EA557218206A2003D0BD0 /* LocationView.swift in Sources */,
+				95140D2F21C1541600DB97D9 /* Models.swift in Sources */,
 				95FF5F3121BEB728000D02B1 /* LocationService.swift in Sources */,
 				953EA54B218202D9003D0BD0 /* DetailsFoodView.swift in Sources */,
 				953EA54D2182049C003D0BD0 /* DetailsFoodViewController.swift in Sources */,
