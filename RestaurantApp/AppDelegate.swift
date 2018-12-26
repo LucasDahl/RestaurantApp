@@ -23,6 +23,17 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
         
+        service.request(.details(id: "WavvLdfdP6g8aZTtbBQHTw")) { (result) in
+            switch result {
+            case .success(let responce):
+                let details = try? self.jsonDecoder.decode(Details.self, from: responce.data)
+                print("Details: \n\n \(details)")
+            case .failure(let error):
+                print(error)
+            }
+            
+        }
+        
         // Convert the API data from snakeCase camel
         jsonDecoder.keyDecodingStrategy = .convertFromSnakeCase
         
@@ -61,6 +72,21 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         window.makeKeyAndVisible()
         
         return true
+    }
+    
+    private func loadDetails(withId id: String) {
+    
+        service.request(.details(id: id )) { [weak self ](result) in
+            guard let strongSelf = self else {return}
+            switch result {
+            case .success(let response):
+                let details = try? strongSelf.jsonDecoder.decode(Details.self, from: response.data)
+                print("Details: \n\n \(details)")
+            case .failure(let error):
+                assertionFailure("Error getting the location: \(error)")
+            }
+        }
+    
     }
     
     private func loadBusinesses(with coordiante: CLLocationCoordinate2D) {

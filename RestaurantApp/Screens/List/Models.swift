@@ -7,6 +7,7 @@
 //
 
 import Foundation
+import CoreLocation
 
 struct  Root: Codable {
     
@@ -62,3 +63,44 @@ extension RestaurantListViewModel {
         self.distance = business.distance / 1606.344
     }
 }
+
+
+// Create a location struct
+struct Details: Decodable {
+    
+    // Properties
+    let price: String
+    let phone: String
+    let isCloased: Bool
+    let ratig: Double
+    let name: String
+    let photos: [URL]
+    let coordinates: CLLocationCoordinate2D
+    
+}
+
+// Make CLLocation confrom to Decodable
+extension CLLocationCoordinate2D: Decodable {
+    
+    // Provide decoding keys
+    enum CodingKeys: CodingKey {
+        case latitude
+        case longitude
+    }
+    
+    public init(from decoder: Decoder) throws {
+        
+        // Create a container
+        let container = try decoder.container(keyedBy: CodingKeys.self)
+        
+        // Grt long and lat
+        let latitude = try container.decode(Double.self, forKey: .latitude)
+        let longitude = try container.decode(Double.self, forKey: .longitude)
+        
+        // call init
+        self.init(latitude: latitude, longitude: longitude)
+        
+    }
+    
+}
+
