@@ -377,6 +377,9 @@
                     </view>
                     <navigationItem key="navigationItem" title="Title" largeTitleDisplayMode="never" id="UQF-5l-wsT"/>
                     <size key="freeformSize" width="375" height="1024"/>
+                    <connections>
+                        <outlet property="detailsFoodView" destination="EbV-LW-QPF" id="iWk-bS-Gl7"/>
+                    </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="aoC-YI-vdd" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>

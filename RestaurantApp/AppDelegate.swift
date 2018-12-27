@@ -19,36 +19,36 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     let storyboard = UIStoryboard(name: "Main", bundle: nil)
     let service = MoyaProvider<YelpService.BusinessesProvider>()
     let jsonDecoder = JSONDecoder()
-
+    var navigationController: UINavigationController?
 
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
-        
-        
-        
+
+
+
         // Convert the API data from snakeCase camel
         jsonDecoder.keyDecodingStrategy = .convertFromSnakeCase
-        
+
         //  Get the location
-        locationService.didChangeStatus = {[weak self] success in
-            
+        locationService.didChangeStatus = { [weak self] success in
+
             if success {
                 self?.locationService.getLocation()
             }
-            
+
         }
-        
+
         // Store the location
-        locationService.newLocation = {[weak self] result in
-            
+        locationService.newLocation = { [weak self] result in
+
             switch result {
             case .success(let location):
                 self?.loadBusinesses(with: location.coordinate)
             case .failure(let error):
                 assertionFailure("Error getting the location: \(error)")
             }
-            
+
         }
-        
+
         // Look for the location statues
         switch locationService.status {
             case .notDetermined, .denied, .restricted:
@@ -57,34 +57,37 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
                 window.rootViewController = locationViewController
             default:
                 let nav = storyboard.instantiateViewController(withIdentifier: "RestaurantNavigationController") as? UINavigationController
+                self.navigationController = nav
                 window.rootViewController = nav
                 locationService.getLocation()
                 (nav?.topViewController as? RestaurantTableTableViewController)?.delegate = self
-            
+
         }
         window.makeKeyAndVisible()
-        
+
         return true
     }
-    
+
     private func loadDetails(withId id: String) {
-    
+
         service.request(.details(id: id)) { [weak self](result) in
             switch result {
-            case .success(let responce):
+            case .success(let response):
                 guard let strongSelf = self else {return}
-                let details = try? strongSelf.jsonDecoder.decode(Details.self, from: responce.data)
-                print("Details: \n\n \(details)")
+                if let details = try? strongSelf.jsonDecoder.decode(Details.self, from: response.data) {
+                    let detailsViewModel = DetailsViewModel(details: details)
+                    (strongSelf.navigationController?.topViewController as? DetailsFoodViewController)?.viewModel = detailsViewModel
+                }
             case .failure(let error):
                 print(error)
             }
-            
+
         }
-    
+
     }
-    
+
     private func loadBusinesses(with coordiante: CLLocationCoordinate2D) {
-        
+
         service.request(.search(lat: coordiante.latitude, long: coordiante.longitude)) { [weak self] (result) in
             switch result {
             case .success(let response):
@@ -99,7 +102,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
                 print("Error: \(error)")
             }
         }
-        
+
     }
 
 
