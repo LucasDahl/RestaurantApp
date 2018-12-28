@@ -15,7 +15,7 @@ protocol  ListActions: class {
 class RestaurantTableTableViewController: UITableViewController {
     
     // Properties
-    var vieModels = [RestaurantListViewModel]() {
+    var viewModels = [RestaurantListViewModel]() {
         didSet {
             tableView.reloadData()
         }
@@ -32,7 +32,7 @@ class RestaurantTableTableViewController: UITableViewController {
 
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         // #warning Incomplete implementation, return the number of rows
-        return vieModels.count
+        return viewModels.count
     }
 
     
@@ -40,7 +40,7 @@ class RestaurantTableTableViewController: UITableViewController {
         let cell = tableView.dequeueReusableCell(withIdentifier: "RestaurantCell", for: indexPath) as! RestaurantTableViewCell
 
         // Create teh viewModel
-        let vm = vieModels[indexPath.row]
+        let vm = viewModels[indexPath.row]
         
         // Configure the viewModel
         cell.configure(with: vm)
@@ -52,7 +52,7 @@ class RestaurantTableTableViewController: UITableViewController {
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         
         // Notify the appDelegate when it is fired
-        let vm = vieModels[indexPath.row]
+        let vm = viewModels[indexPath.row]
         delegate?.didTapCell(vm)
         
     }

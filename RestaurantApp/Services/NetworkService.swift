@@ -25,7 +25,7 @@ enum YelpService  {
             case .search:
                 return "/search"
             case let .details(id):
-                return "\(id)"
+                return "/\(id)"
             }
         }
         

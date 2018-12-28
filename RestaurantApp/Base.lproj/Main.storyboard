@@ -194,10 +194,6 @@
                                 </connections>
                             </tableViewCell>
                         </prototypes>
-                        <connections>
-                            <outlet property="dataSource" destination="7uR-qm-eDl" id="zeF-x1-wwz"/>
-                            <outlet property="delegate" destination="7uR-qm-eDl" id="Gjt-wg-gDk"/>
-                        </connections>
                     </tableView>
                     <navigationItem key="navigationItem" title="Restaurants" id="azl-2W-gso"/>
                 </tableViewController>
