@@ -14,8 +14,8 @@ import CoreLocation
 class AppDelegate: UIResponder, UIApplicationDelegate {
 
     // Properties
-    //let window = UIWindow()
-    var window: UIWindow?
+    let window = UIWindow()
+    //var window: UIWindow?
     let locationService = LocationService()
     let storyboard = UIStoryboard(name: "Main", bundle: nil)
     let service = MoyaProvider<YelpService.BusinessesProvider>()
@@ -55,16 +55,16 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
             case .notDetermined, .denied, .restricted:
                 let locationViewController = storyboard.instantiateViewController(withIdentifier: "LocationViewController") as? LocationViewController
                 locationViewController?.delegate = self
-                window!.rootViewController = locationViewController
+                window.rootViewController = locationViewController
             default:
                 let nav = storyboard.instantiateViewController(withIdentifier: "RestaurantNavigationController") as? UINavigationController
                 self.navigationController = nav
-                window?.rootViewController = nav
+                window.rootViewController = nav
                 locationService.getLocation()
                 (nav?.topViewController as? RestaurantTableTableViewController)?.delegate = self
 
         }
-        window!.makeKeyAndVisible()
+        window.makeKeyAndVisible()
 
         return true
     }
@@ -98,7 +98,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
                 guard let strongSelf = self else {return}
                 let root = try? strongSelf.jsonDecoder.decode(Root.self, from: response.data)
                 let viewModels = root?.businesses.compactMap(RestaurantListViewModel.init).sorted(by: { $0.distance < $1.distance})
-                if let nav = strongSelf.window!.rootViewController as? UINavigationController,
+                if let nav = strongSelf.window.rootViewController as? UINavigationController,
                     let restaurantListViewController = nav.topViewController as? RestaurantTableTableViewController {
                     restaurantListViewController.viewModels = viewModels ?? []
                 }
