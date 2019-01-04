@@ -11,11 +11,15 @@ import UIKit
 class DetailsCollectionViewCell: UICollectionViewCell {
     
     // Properties
-    let imageView = UIInputView()
+    let imageView = UIImageView()
     
     // Override init
     override init(frame: CGRect) {
         super.init(frame: .zero)
+        
+        // Call the setUp method
+        setUp()
+        
     }
     
     required init?(coder aDecoder: NSCoder) {
