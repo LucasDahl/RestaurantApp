@@ -8,6 +8,8 @@
 
 import UIKit
 import AlamofireImage
+import MapKit
+import CoreLocation
 
 class DetailsFoodViewController: UIViewController {
     
@@ -44,7 +46,27 @@ class DetailsFoodViewController: UIViewController {
             // reload the collectionView
             detailsFoodView.collectionView?.reloadData()
             
+            // Update the map
+            centerMap(for: viewModel.coordinate)
+            
         }
+        
+    }
+    
+    func centerMap(for coordinate: CLLocationCoordinate2D) {
+        
+        // Make the region for locationg the user
+        let region = MKCoordinateRegion(center: coordinate, latitudinalMeters: 100, longitudinalMeters: 100)
+        
+        // create the annotation
+        let annotation = MKPointAnnotation()
+        
+        // Set the annotation coordinate
+        annotation.coordinate = coordinate
+        
+        // Configure the map
+        detailsFoodView.mapView?.addAnnotation(annotation)
+        detailsFoodView.mapView?.setRegion(region, animated: true)
         
     }
 
@@ -85,6 +107,13 @@ extension DetailsFoodViewController: UICollectionViewDataSource, UICollectionVie
     
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
         return CGSize(width: collectionView.bounds.width, height: collectionView.bounds.height)
+    }
+    
+    func collectionView(_ collectionView: UICollectionView, willDisplay cell: UICollectionViewCell, forItemAt indexPath: IndexPath) {
+        
+        // Set the page controll to the current image
+        detailsFoodView.pageControl?.currentPage = indexPath.item
+        
     }
     
 }
