@@ -123,7 +123,7 @@ extension DetailsViewModel {
         self.price = details.price
         self.isOpen = details.isClosed ? "Closed" : "Open"
         self.phoneNumber = details.phone
-        self.rating = "\(details.rating) / 5"
+        self.rating = "\(details.rating) / 5.0"
         self.imageUrls = details.photos
         self.coordinate = details.coordinates
 

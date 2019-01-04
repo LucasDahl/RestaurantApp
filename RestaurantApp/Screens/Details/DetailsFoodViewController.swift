@@ -49,6 +49,9 @@ class DetailsFoodViewController: UIViewController {
             // Update the map
             centerMap(for: viewModel.coordinate)
             
+            // Set the title
+            title = viewModel.name
+            
         }
         
     }
