@@ -9,7 +9,7 @@
 import UIKit
 
 protocol  ListActions: class {
-    func didTapCell(_ vieModel: RestaurantListViewModel)
+    func didTapCell(_ viewController: UIViewController, viewModel: RestaurantListViewModel)
 }
 
 class RestaurantTableTableViewController: UITableViewController {
@@ -51,9 +51,15 @@ class RestaurantTableTableViewController: UITableViewController {
     // MARK: - Delegate
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         
+        // Get the details viewController
+        guard let detailsViewController = storyboard?.instantiateViewController(withIdentifier: "DetailsViewController") else { return }
+        
+        // Push the navigation viewController to the stack.
+        navigationController?.pushViewController(detailsViewController, animated: true)
+        
         // Notify the appDelegate when it is fired
         let vm = viewModels[indexPath.row]
-        delegate?.didTapCell(vm)
+        delegate?.didTapCell(detailsViewController, viewModel: vm)
         
     }
 

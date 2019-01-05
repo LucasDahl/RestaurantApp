@@ -69,7 +69,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         return true
     }
 
-    private func loadDetails(withId id: String) {
+    private func loadDetails(for viewController: UIViewController, id: String) {
 
         service.request(.details(id: id)) { [weak self](result) in
             switch result {
@@ -78,7 +78,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
                 if let details = try? strongSelf.jsonDecoder.decode(Details.self, from: response.data) {
                     
                     let detailsViewModel = DetailsViewModel(details: details)
-                    (strongSelf.navigationController?.topViewController as? DetailsFoodViewController)?.viewModel = detailsViewModel
+                    (viewController as? DetailsFoodViewController)?.viewModel = detailsViewModel
                     print(details)
                     
                 }
@@ -93,14 +93,20 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     private func loadBusinesses(with coordiante: CLLocationCoordinate2D) {
 
         service.request(.search(lat: coordiante.latitude, long: coordiante.longitude)) { [weak self] (result) in
+            guard let strongSelf = self else {return}
             switch result {
             case .success(let response):
-                guard let strongSelf = self else {return}
                 let root = try? strongSelf.jsonDecoder.decode(Root.self, from: response.data)
                 let viewModels = root?.businesses.compactMap(RestaurantListViewModel.init).sorted(by: { $0.distance < $1.distance})
                 if let nav = strongSelf.window.rootViewController as? UINavigationController,
                     let restaurantListViewController = nav.topViewController as? RestaurantTableTableViewController {
                     restaurantListViewController.viewModels = viewModels ?? []
+                } else if let nav = strongSelf.storyboard.instantiateViewController(withIdentifier: "RestaurantNavigationController") as? UINavigationController {
+                    strongSelf.navigationController = nav
+                    strongSelf.window.rootViewController?.present(nav, animated: true) {
+                        (nav.topViewController as? RestaurantTableTableViewController)?.delegate = self
+                        (nav.topViewController as? RestaurantTableTableViewController)?.viewModels = viewModels ?? []
+                    }
                 }
             case .failure(let error):
                 print("Error: \(error)")
@@ -120,8 +126,8 @@ extension AppDelegate: LocationAction, ListActions {
     }
     
     // Get the cell that was tapped
-    func didTapCell(_ vieModel: RestaurantListViewModel) {
-        loadDetails(withId: vieModel.id)
+    func didTapCell(_ viewController: UIViewController, viewModel: RestaurantListViewModel) {
+        loadDetails(for: viewController, id: viewModel.id)
     }
     
 }
