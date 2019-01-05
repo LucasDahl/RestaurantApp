@@ -9,6 +9,7 @@
 import Foundation
 import Moya
 
+// API key from yelp - se below
 private let apiKey = ""
 
 enum YelpService  {
